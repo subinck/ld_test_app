@@ -24,6 +24,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var adapterHorizontal: NumberPickerAdapter
     private lateinit var binding: ActivityMainBinding
     private lateinit var viewModel: MainActivityViewModel
+    private  var mainList:List<TvShowEntity> = arrayListOf()
     private var season:Int=1
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,7 +38,7 @@ private fun initViews(){
     binding.listItemSeason.text="Season : 1"
         binding.recyclerView1.layoutManager = LinearLayoutManager(this)
         binding.recyclerViewHorizontal.layoutManager=LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL, false)
-    val list= listOf<SeasonNumbers>(
+    var list= listOf<SeasonNumbers>(
         SeasonNumbers(1),
         SeasonNumbers(2),
         SeasonNumbers(3),
@@ -47,6 +48,7 @@ private fun initViews(){
         SeasonNumbers(7),
         SeasonNumbers(8),
     )
+
     adapterHorizontal = NumberPickerAdapter(list,this){
         listItemClicked(it)
         season=it.number
@@ -59,11 +61,11 @@ private fun initViews(){
         viewModel = ViewModelProvider(this)[MainActivityViewModel::class.java]
       viewModel.getFromDB().observe(this){dbdata->
 
-          if(dbdata!=null){
+          if(dbdata.isNotEmpty()){
               val subList=getSubList(season,dbdata)
+              mainList=dbdata
               adapter = ItemAdapter(subList)
               binding.recyclerView1.adapter = adapter
-
 
           }else{
               viewModel.getLiveDataObserver().observe(this) { response ->
@@ -81,6 +83,7 @@ private fun initViews(){
                           val tvShowEntity= TvShowEntity(airDate,id,original,name,number,season,summary)
                           entityList.add(tvShowEntity)
                       }
+                      mainList=entityList
                       val subList=getSubList(season,entityList)
                       adapter = ItemAdapter(subList)
                       binding.recyclerView1.adapter = adapter
