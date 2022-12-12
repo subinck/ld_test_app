@@ -1,6 +1,7 @@
 package com.subin.ldtestapplication.ui
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
@@ -9,6 +10,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.viewpager.widget.ViewPager
 import androidx.viewpager.widget.ViewPager.OnPageChangeListener
+import com.subin.ldtestapplication.GuideActivity
 import com.subin.ldtestapplication.R
 import com.subin.ldtestapplication.data.database.TvShowEntity
 import com.subin.ldtestapplication.data.models.SeasonNumbers
@@ -32,12 +34,17 @@ class MainActivity : AppCompatActivity() {
     private var season: Int = 1
     private lateinit var viewPager:ViewPager
     private var isViewed:Boolean=false
+    private var isFromGuide:String?=null
     private lateinit var mViewPagerAdapter:ViewPagerAdapter
     var mPageLastScreen = 1
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         supportActionBar?.hide()
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
+        isFromGuide=intent.getStringExtra("IsFromGuide")
+        if (isFromGuide==null) {
+            getGuide()
+        }
         initViews()
         initViewModel()
     }
@@ -53,6 +60,10 @@ class MainActivity : AppCompatActivity() {
 
 
 
+    }
+    private fun getGuide(){
+        val i:Intent= Intent(this@MainActivity,GuideActivity::class.java)
+        startActivity(i)
     }
 
     private fun initViewModel() {
