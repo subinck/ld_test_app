@@ -6,9 +6,9 @@ import com.subin.ldtestapplication.data.models.TVShowResponse
 
 interface GetTvShowRepository {
 
-    fun getDataFromApi(liveData: MutableLiveData<TVShowResponse>)
-     fun insertToDB(tvShowEntity: TvShowEntity)
-    fun getFromDataBase(liveListDB: MutableLiveData<List<TvShowEntity>>)
+      fun getDataFromApi(liveData: MutableLiveData<TVShowResponse>)
+      fun insertToDB(tvShowEntity: TvShowEntity)
+      fun getFromDataBase(liveListDB: MutableLiveData<List<TvShowEntity>>)
 
 
 }

@@ -30,6 +30,7 @@ class MainActivityViewModel  @Inject constructor(
     fun getFromDB():MutableLiveData<List<TvShowEntity>>{
         return liveListDB
     }
+
     fun insertData(article: List<TVShowResponseItem>){
 
         for (item in article) {

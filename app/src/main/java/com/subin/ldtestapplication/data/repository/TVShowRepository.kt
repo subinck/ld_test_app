@@ -18,18 +18,21 @@ class TVShowRepository @Inject constructor(private val api: FetchTvShowApi,
 ):GetTvShowRepository {
     override fun getDataFromApi(liveData: MutableLiveData<TVShowResponse>) {
 
-        val call: Call<TVShowResponse> =api.getTvShowFromAPI()
-        call.enqueue(object: Callback<TVShowResponse> {
-            override fun onResponse(
-                call: Call<TVShowResponse>,
-                response: Response<TVShowResponse>
-            ) {
-                liveData.postValue(response.body())
-            }
-            override fun onFailure(call: Call<TVShowResponse>, t: Throwable) {
-                liveData.postValue(null)
-            }
-        })
+CoroutineScope(Dispatchers.IO).launch {
+
+    val call: Call<TVShowResponse> =api.getTvShowFromAPI()
+    call.enqueue(object: Callback<TVShowResponse> {
+        override fun onResponse(
+            call: Call<TVShowResponse>,
+            response: Response<TVShowResponse>
+        ) {
+            liveData.postValue(response.body())
+        }
+        override fun onFailure(call: Call<TVShowResponse>, t: Throwable) {
+            liveData.postValue(null)
+        }
+    })
+}
     }
 
     override fun insertToDB(tvShowEntity: TvShowEntity) {
