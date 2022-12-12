@@ -1,5 +1,6 @@
 package com.subin.ldtestapplication.ui
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
@@ -32,6 +33,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var viewPager:ViewPager
     private var isViewed:Boolean=false
     private lateinit var mViewPagerAdapter:ViewPagerAdapter
+    var mPageLastScreen = 1
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         supportActionBar?.hide()
@@ -41,7 +43,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initViews() {
-        binding.listItemSeason.text = "Season : 1"
+        binding.listItemSeason.text = "Season : ${mPageLastScreen}"
            binding .recyclerViewHorizontal.layoutManager =
             LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
         viewPager = findViewById(R.id.viewpager)
@@ -61,7 +63,7 @@ class MainActivity : AppCompatActivity() {
                 mainList = dbdata
                 initHorizontalList(mainList,1)
                // adapter = ItemAdapter(subList)
-                mViewPagerAdapter = ViewPagerAdapter(this, mainList,0)
+                mViewPagerAdapter = ViewPagerAdapter(this, mainList)
                 viewPager.adapter = mViewPagerAdapter
                // binding.recyclerView1.adapter = adapter
             } else {
@@ -83,11 +85,8 @@ class MainActivity : AppCompatActivity() {
                         }
                             mainList = entityList
                             initHorizontalList(mainList,1)
-
-                        //adapter = ItemAdapter(subList)
-                        mViewPagerAdapter = ViewPagerAdapter(this, mainList,0)
+                        mViewPagerAdapter = ViewPagerAdapter(this, mainList)
                         viewPager.adapter = mViewPagerAdapter
-                      //  binding.recyclerView1.adapter = adapter
                         viewModel.insertData(list)
 
                     } else {
@@ -108,7 +107,9 @@ class MainActivity : AppCompatActivity() {
                 positionOffset: Float,
                 positionOffsetPixels: Int
             ) {
-                Log.d("gg","dg+$position")
+               if (mPageLastScreen!=position){
+                   mPageLastScreen=position
+               }
 
             }
 
@@ -116,6 +117,7 @@ class MainActivity : AppCompatActivity() {
                 Log.d("gg","dg+$position")
                 binding.listItemSeason.text = "Season : ${position+1}"
                 initHorizontalList(mainList,position+1)
+
 
             }
             override fun onPageScrollStateChanged(state: Int) {
@@ -125,12 +127,13 @@ class MainActivity : AppCompatActivity() {
         })
     }
 
-
+    @SuppressLint("SuspiciousIndentation")
     private fun listItemClicked(data: SeasonNumbers) {
-        binding.listItemSeason.text = "Season : ${data.number}"
-           initHorizontalList(mainList,data.number)
-        mViewPagerAdapter = ViewPagerAdapter(this, mainList,data.number)
-        viewPager.adapter = mViewPagerAdapter
+
+            binding.listItemSeason.text = "Season : ${data.number}"
+            initHorizontalList(mainList, data.number)
+               viewPager.currentItem = data.number-1
+
     }
 
 
@@ -146,7 +149,6 @@ class MainActivity : AppCompatActivity() {
             listItemClicked(it)
             season = it.number
 
-            //initViewModel()
         }
 
          val mid=list.size/2

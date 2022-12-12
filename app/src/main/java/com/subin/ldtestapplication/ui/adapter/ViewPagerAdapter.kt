@@ -11,27 +11,19 @@ import com.subin.ldtestapplication.R
 import com.subin.ldtestapplication.data.database.TvShowEntity
 import com.subin.ldtestapplication.data.models.SeasonNumbers
 
-class ViewPagerAdapter (private val mContext: Context, private val itemList: List<TvShowEntity>,
-                        private var forceSeason:Int) : PagerAdapter() {
+class ViewPagerAdapter (private val mContext: Context, private val itemList: List<TvShowEntity>) : PagerAdapter() {
     private lateinit var adapter: ItemAdapter
-    private var num=forceSeason;
     private var layoutInflater: LayoutInflater? = null
     override fun instantiateItem(container: ViewGroup, position: Int): Any {
         layoutInflater = LayoutInflater.from(mContext)
         val view =    layoutInflater!!.inflate(R.layout.item_viewpage_layout, container, false)
         val recycler: RecyclerView = view.findViewById(R.id.recyclerViewViewPager)
         recycler.layoutManager = LinearLayoutManager(mContext)
-        if (forceSeason>0){
-            val subList=getSubList(forceSeason,itemList)
-            adapter = ItemAdapter(subList)
-            recycler.adapter = adapter
-            forceSeason=0
 
-        }else{
             val subList=getSubList(position+1,itemList)
             adapter = ItemAdapter(subList)
             recycler.adapter = adapter
-        }
+
 
 
      container.addView(view)
